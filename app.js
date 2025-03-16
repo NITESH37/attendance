@@ -21,7 +21,14 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://lnmcbmattendance.netlify.app"],
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+    credentials: true, // If using cookies/auth tokens
+  })
+);
 app.use("/api/v1/auth", authDetails);
 app.use("/api/v1/student", studentDetails);
 app.use("/api/v1/course", courseDetails);
