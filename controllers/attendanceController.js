@@ -2,6 +2,7 @@ import { Attendance } from "../models/attendanceSchema.js";
 import { Student } from "../models/studentSchema.js";
 import { Course } from "../models/courseSchema.js";
 import { Semester } from "../models/semesterSchema.js";
+import { Subject } from "../models/subjectSchema.js";
 import mongoose from "mongoose";
 
 const createAttendance = async (req, res) => {
@@ -10,9 +11,17 @@ const createAttendance = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized: No user found" });
     }
 
-    const { courseId, semesterId, sectionId, durationId, students } = req.body;
+    const { courseId, semesterId, sectionId, subjectId, durationId, students } =
+      req.body;
 
-    if (!courseId || !semesterId || !sectionId || !durationId || !students) {
+    if (
+      !courseId ||
+      !semesterId ||
+      !subjectId ||
+      !sectionId ||
+      !durationId ||
+      !students
+    ) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -27,6 +36,7 @@ const createAttendance = async (req, res) => {
     const existingAttendance = await Attendance.findOne({
       course: courseId,
       semester: semesterId,
+      subject: subjectId,
       section: sectionId,
       duration: durationId,
       date: { $gte: startOfDay, $lt: endOfDay }, // Date range filter
@@ -49,6 +59,7 @@ const createAttendance = async (req, res) => {
       user: req.user._id,
       course: courseId,
       semester: semesterId,
+      subject: subjectId,
       section: sectionId,
       duration: durationId,
       students: formattedStudents,
@@ -62,7 +73,6 @@ const createAttendance = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 // ✅ GET ATTENDANCE PERCENTAGE OF STUDENT
 const getAttendancePercentage = async (req, res) => {
   try {
