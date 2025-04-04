@@ -491,13 +491,11 @@ export const getStudentAttendanceSubjectWise = async (req, res) => {
 
     // Get student IDs
     const studentIds = Object.keys(attendanceMap);
-    console.log("Fetched Student IDs:", studentIds);
 
     // Fetch student details
     const students = await Student.find({
       _id: { $in: studentIds.map((id) => new mongoose.Types.ObjectId(id)) },
     }).lean();
-    console.log("Fetched Students:", students);
 
     // Fetch subject details
     const subjects = await Subject.find().lean();
@@ -506,7 +504,6 @@ export const getStudentAttendanceSubjectWise = async (req, res) => {
 
     for (const studentId of studentIds) {
       const student = students.find((stu) => stu._id.toString() === studentId);
-      console.log(`Processing student ID: ${studentId}, Found:`, student);
 
       for (const subjectId of Object.keys(attendanceMap[studentId])) {
         const { total, attended } = attendanceMap[studentId][subjectId];
@@ -529,7 +526,6 @@ export const getStudentAttendanceSubjectWise = async (req, res) => {
       }
     }
 
-    console.log("Final Attendance Data:", attendanceData);
     res.json(attendanceData);
   } catch (error) {
     console.error("Error fetching attendance data:", error);
