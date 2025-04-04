@@ -21,12 +21,12 @@ router
   .route("/getSubjectsByCourseAndSemester")
   .get(
     isAuthenticatedUser,
-    authorizeRoles("admin"),
+    authorizeRoles("admin", "teacher"),
     getSubjectsByCourseAndSemester
   );
 router
   .route("/allSubject")
-  .get(isAuthenticatedUser, authorizeRoles("admin"), getAllSubjects);
+  .get(isAuthenticatedUser, authorizeRoles("admin", "teacher"), getAllSubjects);
 router
   .route("/:id")
   .put(isAuthenticatedUser, authorizeRoles("admin"), updateSubject);
