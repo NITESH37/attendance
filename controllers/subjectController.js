@@ -28,7 +28,7 @@ export const createSubject = async (req, res) => {
 
     // Create new subject
     const subject = await Subject.create({
-      name,
+      name: upperCaseName,
       course,
       semester,
     });
