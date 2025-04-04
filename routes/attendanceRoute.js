@@ -6,6 +6,7 @@ import {
   getFilteredAttendance,
   getFilteredAttendanceByName,
   getStudentAttendance,
+  getStudentAttendanceSubjectWise,
 } from "../controllers/attendanceController.js";
 import {
   authorizeRoles,
@@ -23,6 +24,7 @@ router
   );
 router.route("/getAttendancePercentage").get(getAttendancePercentage);
 router.route("/").get(getStudentAttendance);
+router.route("/subject").get(getStudentAttendanceSubjectWise);
 
 router.route("/:id").get(getAttendancePercentage);
 // router.route("/").get(
