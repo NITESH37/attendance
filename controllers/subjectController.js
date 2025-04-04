@@ -11,9 +11,13 @@ export const createSubject = async (req, res) => {
         message: "Name, course, and semester are required",
       });
     }
-
+    const upperCaseName = name.toUpperCase();
     // Check if subject with the same name, course, and semester already exists
-    const existingSubject = await Subject.findOne({ name, course, semester });
+    const existingSubject = await Subject.findOne({
+      name: upperCaseName,
+      course,
+      semester,
+    });
     if (existingSubject) {
       return res.status(400).json({
         success: false,
