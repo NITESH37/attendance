@@ -36,7 +36,8 @@ const createAttendance = async (req, res) => {
     const existingAttendance = await Attendance.findOne({
       course: courseId,
       semester: semesterId,
-      subject: subjectId,
+
+      // subject: subjectId,
       section: sectionId,
       duration: durationId,
       date: { $gte: startOfDay, $lt: endOfDay },
