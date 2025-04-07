@@ -25,21 +25,21 @@ const createAttendance = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // ✅ Get today's date
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
+    // ✅ Fix date comparison
+    const now = new Date();
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999);
 
-    // ✅ Define the start and end of the day
-    const startOfDay = new Date(today); // Midnight (00:00:00)
-    const endOfDay = new Date(today + "T23:59:59.999Z"); // End of day (23:59:59.999)
-
-    // ✅ Prevent Duplicate Attendance (same day)
+    // ✅ Check for existing attendance (prevent duplicates)
     const existingAttendance = await Attendance.findOne({
-      course: courseId,
-      semester: semesterId,
-      subject: subjectId,
-      section: sectionId,
-      duration: durationId,
-      date: { $gte: startOfDay, $lt: endOfDay }, // Date range filter
+      course: new mongoose.Types.ObjectId(courseId),
+      semester: new mongoose.Types.ObjectId(semesterId),
+      subject: new mongoose.Types.ObjectId(subjectId),
+      section: new mongoose.Types.ObjectId(sectionId),
+      duration: new mongoose.Types.ObjectId(durationId),
+      date: { $gte: startOfDay, $lt: endOfDay },
     });
 
     if (existingAttendance) {
@@ -48,13 +48,12 @@ const createAttendance = async (req, res) => {
       });
     }
 
-    // ✅ Format Students Array
+    // ✅ Format and Save
     const formattedStudents = students.map((item) => ({
       student: item.studentId,
       present: item.present,
     }));
 
-    // ✅ Save Attendance
     const attendance = new Attendance({
       user: req.user._id,
       course: courseId,
@@ -73,6 +72,7 @@ const createAttendance = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 // ✅ GET ATTENDANCE PERCENTAGE OF STUDENT
 const getAttendancePercentage = async (req, res) => {
   try {
