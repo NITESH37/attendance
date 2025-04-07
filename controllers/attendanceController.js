@@ -34,11 +34,11 @@ const createAttendance = async (req, res) => {
 
     // ✅ Check for existing attendance (prevent duplicates)
     const existingAttendance = await Attendance.findOne({
-      course: new mongoose.Types.ObjectId(courseId),
-      semester: new mongoose.Types.ObjectId(semesterId),
-      subject: new mongoose.Types.ObjectId(subjectId),
-      section: new mongoose.Types.ObjectId(sectionId),
-      duration: new mongoose.Types.ObjectId(durationId),
+      course: courseId,
+      semester: semesterId,
+      subject: subjectId,
+      section: sectionId,
+      duration: durationId,
       date: { $gte: startOfDay, $lt: endOfDay },
     });
 
